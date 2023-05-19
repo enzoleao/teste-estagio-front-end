@@ -1,0 +1,23 @@
+.headerContainer {
+    width: 100%;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    height: 52px;
+    background-color: rgb(21, 73, 122);
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    padding: 0px 20px;
+    gap: 5px;
+        a {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            padding: 0px 10px;
+            border-radius: 4px;
+            transition: all 0.2s;
+            color: white;
+            &:hover {
+                background-color: rgba(62, 97, 131, 0.562);
+            }
+        }
+}

@@ -1,0 +1,15 @@
+.registerCompanyContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    form {
+        display: flex;
+        flex-direction: column;
+        min-height: 32rem;
+        border-radius: 5px;
+        padding: 0px 20px;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    }
+}
