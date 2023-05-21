@@ -25,8 +25,7 @@ export function Table() {
                 )
               })}
             </tbody>
-          </table>
-          <button onClick={()=>console.log(companies)}>teste</button>
+          </table>         
     </div>
   )
 }
