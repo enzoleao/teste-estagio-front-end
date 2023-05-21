@@ -6,7 +6,7 @@ export function Header() {
   return (
     <div className={styles.headerContainer}>
       <a onClick={() => showRegisterCompany(false)}>Home</a>
-      <a onClick={() => showRegisterCompany(true)}>Register Company</a>
+      <a onClick={() => showRegisterCompany(true)}>Cadastro de Empresa</a>
     </div>
   )
 }

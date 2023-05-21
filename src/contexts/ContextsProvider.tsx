@@ -6,6 +6,7 @@ type ContextsTypes = {
   showRegisterCompany: any
   sectors: any
   handleCreateCompany: any
+  companies:any
 }
 
 export const AllContexts = createContext({} as ContextsTypes)
@@ -14,7 +15,7 @@ export function ContextsProvider({ children }: any) {
   const [registerCompany, setRegisterCompany] = useState(false)
   const showRegisterCompany = (data: boolean) => setRegisterCompany(data)
   const [sectors, setSectors] = useState<any>()
-
+  const [companies, setCompanies] = useState<any>()
   useEffect(() => {
     const sectors = async () => {
       try {
@@ -24,11 +25,36 @@ export function ContextsProvider({ children }: any) {
         console.log(err)
       }
     }
+    const companies = async() => {
+      try {
+        const response = await api.get('/companies')
+        setCompanies(response.data.companies)
+      }catch(err){
+        console.log(err)
+      }
+    }
     sectors()
+    companies()
   }, [])
 
-  const handleCreateCompany = (data: any) => {
-    console.log(data)
+  const handleCreateCompany = async (data: any) => {
+    
+    try {
+      const response = await api.post('/companies',data)
+      console.log(data)
+      setCompanies([
+        ...companies,
+        {
+          name: data.name,
+          cnpj: data.cnpj,
+          sectors: sectors.filter((i: any) => data.sectorsId.includes(i.id))
+        }
+      ])
+      return response
+    }catch (err) {
+      console.log(err)
+      return err
+    }
   }
   return (
     <AllContexts.Provider
@@ -37,6 +63,7 @@ export function ContextsProvider({ children }: any) {
         showRegisterCompany,
         sectors,
         handleCreateCompany,
+        companies
       }}
     >
       {children}

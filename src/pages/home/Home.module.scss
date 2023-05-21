@@ -3,14 +3,14 @@
     width: 100vw;
     display: flex;
     justify-content: center;
-    
     .homeContainer {
         width: 100%;
         max-width: 1120px;
         padding-top: 52px;
         display: flex;
         justify-content: center;
-
+        align-items: center;
+        
         .transitionAnimation, .transitionAnimationActive {
             position: relative;
             left: -100%;
