@@ -13,11 +13,13 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { SnackBar } from '../SnackBar'
 import { BsBuildingAdd } from 'react-icons/bs'
+
 type DataCompany = {
   cnpj: number
   name: string
   sectorsId: []
 }
+
 export function RegisterCompany() {
   const { register, handleSubmit } = useForm<DataCompany>()
   const MenuProps = {
@@ -34,7 +36,7 @@ export function RegisterCompany() {
   const [snackBarOpen, setSnackBarOpen] = useState(false)
   const [responseMenssage, setResponseMenssage] = useState('')
   const [response, setResponse] = useState<any>()
-
+  
   const handleChange = (event: any) => {
     const {
       target: { value },
@@ -45,15 +47,17 @@ export function RegisterCompany() {
     )
   }
   const handleRegisterCompany = async (data: DataCompany) => {
-    try {
+   
       const response = await handleCreateCompany(data)
-      setSnackBarOpen(true)
-      setResponseMenssage(response.data.message)
-      setResponse(false)
-    }catch(err){
+        if (response.status === 200) {
+          setSnackBarOpen(true)
+          setResponseMenssage(response.data.message)
+          setResponse(false)
+        }
+      setResponseMenssage(response.response.data.erro)
       setResponse(true)
       setSnackBarOpen(true)
-    }
+    
   }
 
   return (
@@ -112,7 +116,7 @@ export function RegisterCompany() {
                 renderValue={(selected) => selected.join(', ')}
                 MenuProps={MenuProps}
               >
-                {sectors.map((name: any) => (
+                {typeof sectors !== 'undefined' && sectors.map((name: any) => (
                   <MenuItem key={name.id} value={name.id}>
                     <Checkbox checked={sectorsName.indexOf(name.id) > -1} />
                     <ListItemText primary={name.name} />
@@ -138,6 +142,7 @@ export function RegisterCompany() {
         setOpen={setSnackBarOpen}
         error={response}
         message={responseMenssage}
+        errorMessage={responseMenssage}
       />
     </div>
   )

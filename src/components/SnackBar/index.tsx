@@ -14,10 +14,10 @@ interface SnackBarProps {
     error?: boolean;
     open: boolean;
     setOpen: any;
+    errorMessage: string
 }
 export function SnackBar(props: SnackBarProps){
-    const [open, setOpen] = useState(true);
-
+    
     const handleClose = (event?: SyntheticEvent | Event, reason?: string) => {
       if (reason === 'clickaway') {
         return;
@@ -32,7 +32,7 @@ export function SnackBar(props: SnackBarProps){
         
         {
         props.error ? 
-       ( <Alert severity="error">Ocorreu algum erro !</Alert>)
+       ( <Alert severity="error">{props.errorMessage}</Alert>)
         :
         (<Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
             {props.message}

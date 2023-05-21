@@ -3,6 +3,7 @@ import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Collapse from '@mui/material/Collapse';
+import { ExpandLess, ExpandMore } from '@mui/icons-material';
 
 export default function Droplist(props: any) {
   const [open, setOpen] = useState(false);
@@ -18,12 +19,13 @@ export default function Droplist(props: any) {
     >
       <ListItemButton onClick={handleClick}>
         <ListItemText  primary="VISUALIZAR" />
+        {open ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
             {typeof props.sectors !== 'undefined' && props.sectors.map((i: any)=>{
                 return (
-                    <ListItemButton >
+                    <ListItemButton key={i.id} >
                         <ListItemText  primary={`${i.name}`} />
                     </ListItemButton>
                 )

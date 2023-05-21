@@ -1,62 +1,130 @@
-.tableContainer {
+.tableWrapper {
+    height: 100%;
     width: 100%;
     display: flex;
+    align-items: center;
     justify-content: center;
-    height: 100%;
-    max-height: 500px;
-    overflow-y: auto;
-    table {
-        border-collapse: separate;
+    flex-direction: column;
+    .tableContainer {
         width: 100%;
-        border-spacing: 0 0.5rem;
-        font-weight: 500;
-        font-size: 16px;
-        line-height: 19px;
-        color: #FCFCFC;
-        thead {
-            color: #797979;
-            tr {
-                background-color: white;
-                cursor: auto;
-                &:hover {
-                    background-color: white;
-                }       
-            } 
-            th {
-                text-align: start;
-            }
-            
-        }
-        tbody {
+        display: flex;
+        height: 100%;
+        max-height: 600px;
+        flex-direction: column;
+        gap: 12px;
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
 
-            tr {
-                background-color: rgb(21, 73, 122);;
-                cursor: pointer;
-                height: 20px;
-                td {
-                    padding: 0px 9px;
-                    background: inherit;
-                    &:first-child {
-                        border-top-left-radius: 6px;
-                        border-bottom-left-radius: 6px;
-                        width: 50%;
-                        
+            div {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+
+                .iconSearchInput {
+                    height: 22px;
+                    width: 22px;
+
+                    &:hover {
+                        color: rgb(8, 56, 100);
                     }
-                    &:last-child {
-                        border-top-right-radius: 6px;
-                        border-bottom-right-radius: 6px;
-                        
+                }
+            }
+        }
+        .tableWrapperOverFlow {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            height: 100%;
+            max-height: 500px;
+            overflow-y: auto;
+            table {
+                border-collapse: separate;
+                width: 100%;
+                border-spacing: 0 0.5rem;
+                font-weight: 500;
+                font-size: 16px;
+                line-height: 19px;
+                color: #FCFCFC;
+                thead {
+                    height: 54px;
+                    position: sticky;
+                    top: 0;
+                    color: rgb(8, 56, 100);
+                    z-index: 2;
+                    tr {
+                        background-color: white;
+                        cursor: auto;
+                        &:hover {
+                            background-color: white;
+                        }       
+                    } 
+                    th {
+                        text-align: start;
                     }
                     
                 }
-                &:hover {
-                    background-color: rgb(31, 49, 66);;
+                tbody {
+        
+                    tr {
+                        background-color: rgb(21, 73, 122);;
+                        cursor: pointer;
+                        height: 20px;
+                        td {
+                            padding: 0px 9px;
+                            background: inherit;
+                            &:first-child {
+                                border-top-left-radius: 6px;
+                                border-bottom-left-radius: 6px;
+                                width: 50%;
+                                
+                            }
+                            &:last-child {
+                                border-top-right-radius: 6px;
+                                border-bottom-right-radius: 6px;
+                                
+                            }
+                            
+                        }
+                        &:hover {
+                            background-color: rgb(31, 49, 66);
+                        }
+                    }
                 }
+                .sectorsHeader {
+                    width: 25%;
+                }
+                
             }
         }
-        .sectorsHeader {
-            width: 25%;
+        footer {
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding-right: 20px;
+            button {
+                height: 32px;
+                width: 32px;
+                border-radius: 6px;
+                color: white;
+                background-color: rgb(21, 73, 122);
+
+                &:hover {
+                    background-color: rgb(31, 49, 66);
+                }
+            }
+            p {
+                background-color: #b8b4b4;
+                height: 32px;
+                width: 32px;
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
         }
-        
     }
 }

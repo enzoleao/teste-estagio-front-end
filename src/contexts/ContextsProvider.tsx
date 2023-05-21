@@ -7,15 +7,23 @@ type ContextsTypes = {
   sectors: any
   handleCreateCompany: any
   companies:any
+  loading: boolean
+  pageToShowOnTable: number
+  setPageToShowOnTable: any
+  setCompanies: any
+  maxPage: any;
 }
 
 export const AllContexts = createContext({} as ContextsTypes)
 
 export function ContextsProvider({ children }: any) {
   const [registerCompany, setRegisterCompany] = useState(false)
-  const showRegisterCompany = (data: boolean) => setRegisterCompany(data)
   const [sectors, setSectors] = useState<any>()
   const [companies, setCompanies] = useState<any>()
+  const [loading, setLoading] = useState(true)
+  const [pageToShowOnTable, setPageToShowOnTable] = useState(1)
+  const [maxPage, setMaxPage] = useState()
+  const showRegisterCompany = (data: boolean) => setRegisterCompany(data)
   useEffect(() => {
     const sectors = async () => {
       try {
@@ -28,20 +36,21 @@ export function ContextsProvider({ children }: any) {
     const companies = async() => {
       try {
         const response = await api.get('/companies')
-        setCompanies(response.data.companies)
+        setPageToShowOnTable(response.data.companies.current_page)
+        setMaxPage(response.data.companies.last_page)
+        setCompanies(response.data.companies.data)
       }catch(err){
-        console.log(err)
+        return err
       }
     }
     sectors()
     companies()
+    setLoading(false)
   }, [])
 
   const handleCreateCompany = async (data: any) => {
-    
     try {
-      const response = await api.post('/companies',data)
-      console.log(data)
+      const response = await api.post('/companies', data)
       setCompanies([
         ...companies,
         {
@@ -51,9 +60,8 @@ export function ContextsProvider({ children }: any) {
         }
       ])
       return response
-    }catch (err) {
-      console.log(err)
-      return err
+    }catch (error) {
+      return error
     }
   }
   return (
@@ -63,7 +71,12 @@ export function ContextsProvider({ children }: any) {
         showRegisterCompany,
         sectors,
         handleCreateCompany,
-        companies
+        companies,
+        loading,
+        pageToShowOnTable, 
+        setPageToShowOnTable,
+        setCompanies,
+        maxPage
       }}
     >
       {children}
