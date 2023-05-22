@@ -36,7 +36,7 @@ export function RegisterCompany() {
   const [snackBarOpen, setSnackBarOpen] = useState(false)
   const [responseMenssage, setResponseMenssage] = useState('')
   const [response, setResponse] = useState<any>()
-  
+
   const handleChange = (event: any) => {
     const {
       target: { value },
@@ -47,26 +47,29 @@ export function RegisterCompany() {
     )
   }
   const handleRegisterCompany = async (data: DataCompany) => {
-   
-      const response = await handleCreateCompany(data)
-        if (response.status === 200) {
-          setSnackBarOpen(true)
-          setResponseMenssage(response.data.message)
-          setResponse(false)
-        }
+    const response = await handleCreateCompany(data)
+    if (response.status === 200) {
+      setSnackBarOpen(true)
+      setResponseMenssage(response.data.message)
+      setResponse(false)
+    } else {
       setResponseMenssage(response.response.data.erro)
       setResponse(true)
       setSnackBarOpen(true)
-    
+    }
   }
 
   return (
     <div className={styles.registerCompanyContainer}>
       <form onSubmit={handleSubmit(handleRegisterCompany)} action="">
         <header>
-          <BsBuildingAdd className={styles.companyIcon}/>
-          <Typography sx={{color:"rgb(21, 73, 122)"}} variant="h4" component="h2">
-             CADASTRO DE EMPRESA
+          <BsBuildingAdd className={styles.companyIcon} />
+          <Typography
+            sx={{ color: 'rgb(21, 73, 122)' }}
+            variant="h4"
+            component="h2"
+          >
+            CADASTRO DE EMPRESA
           </Typography>
         </header>
         <main>
@@ -75,7 +78,6 @@ export function RegisterCompany() {
               {...register('name')}
               id="standard-basic"
               label="Nome da empresa"
-              
               variant="outlined"
               required
               autoComplete="off"
@@ -112,16 +114,17 @@ export function RegisterCompany() {
                 {...register('sectorsId')}
                 onChange={handleChange}
                 input={<OutlinedInput label="Tag" />}
-                sx={{maxWidth:'320px'}}
+                sx={{ maxWidth: '320px' }}
                 renderValue={(selected) => selected.join(', ')}
                 MenuProps={MenuProps}
               >
-                {typeof sectors !== 'undefined' && sectors.map((name: any) => (
-                  <MenuItem key={name.id} value={name.id}>
-                    <Checkbox checked={sectorsName.indexOf(name.id) > -1} />
-                    <ListItemText primary={name.name} />
-                  </MenuItem>
-                ))}
+                {typeof sectors !== 'undefined' &&
+                  sectors.map((name: any) => (
+                    <MenuItem key={name.id} value={name.id}>
+                      <Checkbox checked={sectorsName.indexOf(name.id) > -1} />
+                      <ListItemText primary={name.name} />
+                    </MenuItem>
+                  ))}
               </Select>
             </FormControl>
           </span>
@@ -130,15 +133,14 @@ export function RegisterCompany() {
           <Button
             type="submit"
             variant="outlined"
-            sx={{ color: 'rgb(58, 96, 134)', width:'320px', height:'44px' }}
+            sx={{ color: 'rgb(58, 96, 134)', width: '320px', height: '44px' }}
           >
             CADASTRAR
           </Button>
-         
         </footer>
       </form>
-      <SnackBar 
-        open={snackBarOpen} 
+      <SnackBar
+        open={snackBarOpen}
         setOpen={setSnackBarOpen}
         error={response}
         message={responseMenssage}
