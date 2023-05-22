@@ -15,9 +15,7 @@ export default function Droplist(props: any) {
   return (
     <List component="nav" aria-labelledby="nested-list-subheader">
       <ListItemButton onClick={handleClick}>
-        <ListItemText
-          primary={`${props.open === true ? 'ESCONDER' : 'VISUALIZAR'}`}
-        />
+        <ListItemText primary={open ? 'OCULTAR' : `VISUALIZAR`} />
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
       <Collapse in={open} timeout="auto" unmountOnExit>
