@@ -106,7 +106,7 @@ export function Table() {
                 <FormControlLabel
                   value="Empresa"
                   control={<Radio />}
-                  label="Nome"
+                  label="Empresa"
                 />
                 <FormControlLabel
                   value="Setor"
