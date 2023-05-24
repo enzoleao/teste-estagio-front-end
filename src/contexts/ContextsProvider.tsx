@@ -6,12 +6,14 @@ type ContextsTypes = {
   showRegisterCompany: any
   sectors: any
   handleCreateCompany: any
-  companies:any
+  companies: any
   loading: boolean
   pageToShowOnTable: number
   setPageToShowOnTable: any
   setCompanies: any
-  maxPage: any;
+  maxPage: any
+  setShowSnackBarDeleteCompany: any
+  showSnackBarDeleteCompany: any
 }
 
 export const AllContexts = createContext({} as ContextsTypes)
@@ -23,6 +25,8 @@ export function ContextsProvider({ children }: any) {
   const [loading, setLoading] = useState(true)
   const [pageToShowOnTable, setPageToShowOnTable] = useState(1)
   const [maxPage, setMaxPage] = useState()
+  const [showSnackBarDeleteCompany, setShowSnackBarDeleteCompany] =
+    useState(false)
   const showRegisterCompany = (data: boolean) => setRegisterCompany(data)
   useEffect(() => {
     const sectors = async () => {
@@ -33,13 +37,13 @@ export function ContextsProvider({ children }: any) {
         console.log(err)
       }
     }
-    const companies = async() => {
+    const companies = async () => {
       try {
         const response = await api.get('/companies')
         setPageToShowOnTable(response.data.companies.current_page)
         setMaxPage(response.data.companies.last_page)
         setCompanies(response.data.companies.data)
-      }catch(err){
+      } catch (err) {
         return err
       }
     }
@@ -56,11 +60,11 @@ export function ContextsProvider({ children }: any) {
         {
           name: data.name,
           cnpj: data.cnpj,
-          sectors: sectors.filter((i: any) => data.sectorsId.includes(i.id))
-        }
+          sectors: sectors.filter((i: any) => data.sectorsId.includes(i.id)),
+        },
       ])
       return response
-    }catch (error) {
+    } catch (error) {
       return error
     }
   }
@@ -73,10 +77,12 @@ export function ContextsProvider({ children }: any) {
         handleCreateCompany,
         companies,
         loading,
-        pageToShowOnTable, 
+        pageToShowOnTable,
         setPageToShowOnTable,
         setCompanies,
-        maxPage
+        maxPage,
+        showSnackBarDeleteCompany,
+        setShowSnackBarDeleteCompany,
       }}
     >
       {children}

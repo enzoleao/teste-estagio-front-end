@@ -1,13 +1,12 @@
 import styles from './Table.module.scss'
-import Droplist from '../CollapseRow'
 import api from '@/service/api'
 import { useAllContexts } from '@/contexts/ContextsProvider'
 import {
   Button,
+  FilledInput,
   FormControl,
   FormControlLabel,
   FormLabel,
-  Input,
   InputAdornment,
   InputLabel,
   Radio,
@@ -15,6 +14,8 @@ import {
 } from '@mui/material'
 import { RxMagnifyingGlass } from 'react-icons/rx'
 import { useState, ChangeEvent } from 'react'
+import { TableRows } from './tablesRows'
+import { SnackBar } from '../SnackBar'
 
 export function Table() {
   const {
@@ -23,9 +24,12 @@ export function Table() {
     setPageToShowOnTable,
     setCompanies,
     maxPage,
+    showSnackBarDeleteCompany,
+    setShowSnackBarDeleteCompany,
   } = useAllContexts()
   const [companyName, setCompanyName] = useState('')
   const [searchMode, setSearchMode] = useState('Empresa')
+
   const nextPage = async () => {
     setPageToShowOnTable(pageToShowOnTable + 1)
     const response = await api.get(`/companies?page=${pageToShowOnTable + 1}`)
@@ -61,7 +65,6 @@ export function Table() {
       }
       return 0
     })
-
     setCompanies(novoArray)
   }
   const handleChangeSearchMode = (event: ChangeEvent<HTMLInputElement>) => {
@@ -72,11 +75,11 @@ export function Table() {
       <div className={styles.tableContainer}>
         <header>
           <div>
-            <FormControl variant="standard">
+            <FormControl variant="filled">
               <InputLabel htmlFor="input-with-icon-adornment">
                 Pesquisar {searchMode}
               </InputLabel>
-              <Input
+              <FilledInput
                 id="input-with-icon-adornment"
                 sx={{ width: '320px' }}
                 onChange={(e) => setCompanyName(e.target.value)}
@@ -130,19 +133,20 @@ export function Table() {
                   <th>EMPRESA</th>
                   <th>CNPJ </th>
                   <th className={styles.sectorsHeader}>SETORES</th>
+                  <th>AÇÕES</th>
                 </tr>
               </thead>
               <tbody>
                 {typeof companies !== 'undefined' &&
                   companies.map((i: any) => {
                     return (
-                      <tr key={i.id}>
-                        <td>{i.name}</td>
-                        <td>{i.cnpj}</td>
-                        <td>
-                          <Droplist sectors={i.sectors} />
-                        </td>
-                      </tr>
+                      <TableRows
+                        id={i.id}
+                        key={i.id}
+                        name={i.name}
+                        cnpj={i.cnpj}
+                        sectors={i.sectors}
+                      />
                     )
                   })}
               </tbody>
@@ -153,7 +157,9 @@ export function Table() {
               <button
                 disabled={pageToShowOnTable <= 1}
                 className={`${
-                  pageToShowOnTable <= 1 ? 'cursor-not-allowed' : 'cursor-pointer'
+                  pageToShowOnTable <= 1
+                    ? 'cursor-not-allowed'
+                    : 'cursor-pointer'
                 }`}
                 onClick={lastPage}
               >
@@ -176,7 +182,13 @@ export function Table() {
             false
           )}
         </main>
-        </div>
+      </div>
+      <SnackBar
+        open={showSnackBarDeleteCompany}
+        setOpen={setShowSnackBarDeleteCompany}
+        error={false}
+        message={'Deletado com sucesso'}
+      />
     </div>
   )
 }

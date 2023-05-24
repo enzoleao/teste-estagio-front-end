@@ -7,7 +7,15 @@ import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
 import Checkbox from '@mui/material/Checkbox'
 import { useAllContexts } from '@/contexts/ContextsProvider'
-import { Box, Button, Chip, TextField, Theme, Typography, useTheme } from '@mui/material'
+import {
+  Box,
+  Button,
+  Chip,
+  TextField,
+  Theme,
+  Typography,
+  useTheme,
+} from '@mui/material'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { SnackBar } from '../SnackBar'
@@ -25,11 +33,11 @@ function getStyles(name: string, personName: readonly string[], theme: Theme) {
       personName.indexOf(name) === -1
         ? theme.typography.fontWeightRegular
         : theme.typography.fontWeightMedium,
-  };
+  }
 }
 
 export function RegisterCompany() {
-  const { register, handleSubmit } = useForm<DataCompany>()
+  const { register, handleSubmit, reset } = useForm<DataCompany>()
   const MenuProps = {
     PaperProps: {
       style: {
@@ -38,7 +46,7 @@ export function RegisterCompany() {
       },
     },
   }
-  const theme = useTheme();
+  const theme = useTheme()
   const { sectors, companies, setCompanies } = useAllContexts()
   const [sectorsSelected, setSectorsSelected] = useState<any>([])
   const [snackBarOpen, setSnackBarOpen] = useState(false)
@@ -49,9 +57,7 @@ export function RegisterCompany() {
     const {
       target: { value },
     } = event
-    setSectorsSelected(
-      value
-    )
+    setSectorsSelected(value)
   }
   const handleRegisterCompany = async (data: DataCompany) => {
     try {
@@ -59,23 +65,23 @@ export function RegisterCompany() {
       setCompanies([
         ...companies,
         {
+          id: response.data.company.id,
           name: data.name,
           cnpj: data.cnpj,
-          sectors: sectors.filter((secs: any) => 
-            data.sectors.some((secs2: any) => secs2.id === secs.id)
-            )
-        }
+          sectors: sectors.filter((secs: any) =>
+            data.sectors.some((secs2: any) => secs2.id === secs.id),
+          ),
+        },
       ])
       setSnackBarOpen(true)
       setResponse(false)
       setResponseMenssage(response.data.message)
-      console.log(response)
-    }catch (error: any) { 
+      reset()
+    } catch (error: any) {
       setSnackBarOpen(true)
       setResponse(true)
       setResponseMenssage(error.response.data.error)
     }
-  
   }
 
   return (
@@ -99,7 +105,7 @@ export function RegisterCompany() {
               label="Nome da Empresa"
               variant="outlined"
               autoComplete="off"
-              sx={{borderColor:'white'}}
+              sx={{ borderColor: 'white' }}
             />
           </span>
           <span>
@@ -120,38 +126,38 @@ export function RegisterCompany() {
             </InputMask>
           </span>
           <span>
-          <FormControl sx={{maxWidth: '320px'}}>
-            <InputLabel id="demo-multiple-chip-label">Setores</InputLabel>
-            <Select
-            {...register('sectors')}
-              labelId="demo-multiple-chip-label"
-              id="demo-multiple-chip"
-              multiple
-              label="Setores"
-              value={sectorsSelected}
-              onChange={handleChange}
-              input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-              renderValue={(selected) => (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {selected.map((value: any) => {
-                    return <Chip key={value.id} label={value.name} />
-                  })}
-                </Box>
-              )}
-              MenuProps={MenuProps}
-            >
-              {sectors.map((name: any) => (
-                <MenuItem
-                  key={name.id}
-                  value={name}
-                  style={getStyles(name, sectorsSelected, theme)}
-                >
-                  <Checkbox checked={sectorsSelected.indexOf(name) > -1} />
-                  {name.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+            <FormControl sx={{ maxWidth: '320px' }}>
+              <InputLabel id="demo-multiple-chip-label">Setores</InputLabel>
+              <Select
+                {...register('sectors')}
+                labelId="demo-multiple-chip-label"
+                id="demo-multiple-chip"
+                multiple
+                label="Setores"
+                value={sectorsSelected}
+                onChange={handleChange}
+                input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.map((value: any) => {
+                      return <Chip key={value.id} label={value.name} />
+                    })}
+                  </Box>
+                )}
+                MenuProps={MenuProps}
+              >
+                {sectors.map((name: any) => (
+                  <MenuItem
+                    key={name.id}
+                    value={name}
+                    style={getStyles(name, sectorsSelected, theme)}
+                  >
+                    <Checkbox checked={sectorsSelected.indexOf(name) > -1} />
+                    {name.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </span>
         </main>
         <footer>

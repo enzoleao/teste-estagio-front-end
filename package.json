@@ -26,13 +26,13 @@
     "react-dom": "18.2.0",
     "react-hook-form": "^7.43.9",
     "react-icons": "^4.8.0",
-    "react-input-mask": "^2.0.4",
+    "react-input-mask": "3.0.0-alpha.2",
     "sass": "^1.62.1",
     "tailwindcss": "3.3.2",
     "typescript": "5.0.4"
   },
   "devDependencies": {
     "@rocketseat/eslint-config": "^1.2.0",
-    "@types/react-input-mask": "^3.0.2"
+    "@types/react-input-mask": "3.0.2"
   }
 }
