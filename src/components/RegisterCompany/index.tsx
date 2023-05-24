@@ -96,7 +96,7 @@ export function RegisterCompany() {
             <TextField
               {...register('name')}
               id="standard-basic"
-              label="Nome da empresa"
+              label="Nome da Empresa"
               variant="outlined"
               autoComplete="off"
               sx={{borderColor:'white'}}
