@@ -4,20 +4,28 @@ import OutlinedInput from '@mui/material/OutlinedInput'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
-import ListItemText from '@mui/material/ListItemText'
 import Select from '@mui/material/Select'
 import Checkbox from '@mui/material/Checkbox'
 import { useAllContexts } from '@/contexts/ContextsProvider'
-import { Button, TextField, Typography } from '@mui/material'
+import { Box, Button, Chip, TextField, Theme, Typography, useTheme } from '@mui/material'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { SnackBar } from '../SnackBar'
 import { BsBuildingAdd } from 'react-icons/bs'
+import api from '@/service/api'
 
 type DataCompany = {
   cnpj: number
   name: string
-  sectorsId: []
+  sectors: []
+}
+function getStyles(name: string, personName: readonly string[], theme: Theme) {
+  return {
+    fontWeight:
+      personName.indexOf(name) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
 }
 
 export function RegisterCompany() {
@@ -30,33 +38,44 @@ export function RegisterCompany() {
       },
     },
   }
-  const { sectors, handleCreateCompany } = useAllContexts()
-
-  const [sectorsName, setSectorsName] = useState<any>([])
+  const theme = useTheme();
+  const { sectors, companies, setCompanies } = useAllContexts()
+  const [sectorsSelected, setSectorsSelected] = useState<any>([])
   const [snackBarOpen, setSnackBarOpen] = useState(false)
   const [responseMenssage, setResponseMenssage] = useState('')
-  const [response, setResponse] = useState<any>()
+  const [response, setResponse] = useState<any>(false)
 
   const handleChange = (event: any) => {
     const {
       target: { value },
     } = event
-    setSectorsName(
-      // On autofill we get a stringified value.
-      value,
+    setSectorsSelected(
+      value
     )
   }
   const handleRegisterCompany = async (data: DataCompany) => {
-    const response = await handleCreateCompany(data)
-    if (response.status === 200) {
+    try {
+      const response = await api.post('/companies', data)
+      setCompanies([
+        ...companies,
+        {
+          name: data.name,
+          cnpj: data.cnpj,
+          sectors: sectors.filter((secs: any) => 
+            data.sectors.some((secs2: any) => secs2.id === secs.id)
+            )
+        }
+      ])
       setSnackBarOpen(true)
-      setResponseMenssage(response.data.message)
       setResponse(false)
-    } else {
-      setResponseMenssage(response.response.data.erro)
-      setResponse(true)
+      setResponseMenssage(response.data.message)
+      console.log(response)
+    }catch (error: any) { 
       setSnackBarOpen(true)
+      setResponse(true)
+      setResponseMenssage(error.response.data.error)
     }
+  
   }
 
   return (
@@ -79,8 +98,8 @@ export function RegisterCompany() {
               id="standard-basic"
               label="Nome da empresa"
               variant="outlined"
-              required
               autoComplete="off"
+              sx={{borderColor:'white'}}
             />
           </span>
           <span>
@@ -89,7 +108,6 @@ export function RegisterCompany() {
               mask="999.999.99/9999-99"
               disabled={false}
               maskChar=""
-              required
             >
               {() => (
                 <TextField
@@ -97,36 +115,43 @@ export function RegisterCompany() {
                   sx={{ maxWidth: '320px' }}
                   variant="outlined"
                   label="CNPJ"
-                  required
                 />
               )}
             </InputMask>
           </span>
           <span>
-            <FormControl sx={{ m: 1, width: 300 }}>
-              <InputLabel id="demo-multiple-checkbox-label">Setores</InputLabel>
-              <Select
-                labelId="demo-multiple-checkbox-label"
-                id="demo-multiple-checkbox"
-                multiple
-                value={sectorsName}
-                placeholder="Selecione"
-                {...register('sectorsId')}
-                onChange={handleChange}
-                input={<OutlinedInput label="Tag" />}
-                sx={{ maxWidth: '320px' }}
-                renderValue={(selected) => selected.join(', ')}
-                MenuProps={MenuProps}
-              >
-                {typeof sectors !== 'undefined' &&
-                  sectors.map((name: any) => (
-                    <MenuItem key={name.id} value={name.id}>
-                      <Checkbox checked={sectorsName.indexOf(name.id) > -1} />
-                      <ListItemText primary={name.name} />
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl>
+          <FormControl sx={{maxWidth: '320px'}}>
+            <InputLabel id="demo-multiple-chip-label">Setores</InputLabel>
+            <Select
+            {...register('sectors')}
+              labelId="demo-multiple-chip-label"
+              id="demo-multiple-chip"
+              multiple
+              label="Setores"
+              value={sectorsSelected}
+              onChange={handleChange}
+              input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+              renderValue={(selected) => (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                  {selected.map((value: any) => {
+                    return <Chip key={value.id} label={value.name} />
+                  })}
+                </Box>
+              )}
+              MenuProps={MenuProps}
+            >
+              {sectors.map((name: any) => (
+                <MenuItem
+                  key={name.id}
+                  value={name}
+                  style={getStyles(name, sectorsSelected, theme)}
+                >
+                  <Checkbox checked={sectorsSelected.indexOf(name) > -1} />
+                  {name.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           </span>
         </main>
         <footer>
@@ -144,7 +169,6 @@ export function RegisterCompany() {
         setOpen={setSnackBarOpen}
         error={response}
         message={responseMenssage}
-        errorMessage={responseMenssage}
       />
     </div>
   )

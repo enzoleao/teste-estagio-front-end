@@ -14,7 +14,6 @@ interface SnackBarProps {
     error?: boolean;
     open: boolean;
     setOpen: any;
-    errorMessage: string
 }
 export function SnackBar(props: SnackBarProps){
     
@@ -32,7 +31,7 @@ export function SnackBar(props: SnackBarProps){
         
         {
         props.error ? 
-       ( <Alert severity="error">{props.errorMessage}</Alert>)
+       ( <Alert severity="error">{props.message}</Alert>)
         :
         (<Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
             {props.message}

@@ -13,7 +13,7 @@ export default function Droplist(props: any) {
   }
 
   return (
-    <List component="nav" aria-labelledby="nested-list-subheader">
+    <List  component="nav" aria-labelledby="nested-list-subheader">
       <ListItemButton onClick={handleClick}>
         <ListItemText primary={open ? 'OCULTAR' : `VISUALIZAR`} />
         {open ? <ExpandLess /> : <ExpandMore />}

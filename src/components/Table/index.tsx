@@ -122,59 +122,61 @@ export function Table() {
             </Button>
           </div>
         </header>
-        <div className={styles.tableWrapperOverFlow}>
-          <table>
-            <thead>
-              <tr>
-                <th>EMPRESA</th>
-                <th>CNPJ </th>
-                <th className={styles.sectorsHeader}>SETORES</th>
-              </tr>
-            </thead>
-            <tbody>
-              {typeof companies !== 'undefined' &&
-                companies.map((i: any) => {
-                  return (
-                    <tr key={i.id}>
-                      <td>{i.name}</td>
-                      <td>{i.cnpj}</td>
-                      <td>
-                        <Droplist sectors={i.sectors} />
-                      </td>
-                    </tr>
-                  )
-                })}
-            </tbody>
-          </table>
+        <main>
+          <div className={styles.tableWrapperOverFlow}>
+            <table>
+              <thead>
+                <tr>
+                  <th>EMPRESA</th>
+                  <th>CNPJ </th>
+                  <th className={styles.sectorsHeader}>SETORES</th>
+                </tr>
+              </thead>
+              <tbody>
+                {typeof companies !== 'undefined' &&
+                  companies.map((i: any) => {
+                    return (
+                      <tr key={i.id}>
+                        <td>{i.name}</td>
+                        <td>{i.cnpj}</td>
+                        <td>
+                          <Droplist sectors={i.sectors} />
+                        </td>
+                      </tr>
+                    )
+                  })}
+              </tbody>
+            </table>
+          </div>
+          {companyName === '' ? (
+            <footer>
+              <button
+                disabled={pageToShowOnTable <= 1}
+                className={`${
+                  pageToShowOnTable <= 1 ? 'cursor-not-allowed' : 'cursor-pointer'
+                }`}
+                onClick={lastPage}
+              >
+                {`<`}
+              </button>
+              <p>{pageToShowOnTable}</p>
+              <button
+                disabled={pageToShowOnTable === maxPage}
+                className={`${
+                  pageToShowOnTable === maxPage
+                    ? 'cursor-not-allowed'
+                    : 'cursor-pointer'
+                }`}
+                onClick={nextPage}
+              >
+                {`>`}
+              </button>
+            </footer>
+          ) : (
+            false
+          )}
+        </main>
         </div>
-        {companyName === '' ? (
-          <footer>
-            <button
-              disabled={pageToShowOnTable <= 1}
-              className={`${
-                pageToShowOnTable <= 1 ? 'cursor-not-allowed' : 'cursor-pointer'
-              }`}
-              onClick={lastPage}
-            >
-              {`<`}
-            </button>
-            <p>{pageToShowOnTable}</p>
-            <button
-              disabled={pageToShowOnTable === maxPage}
-              className={`${
-                pageToShowOnTable === maxPage
-                  ? 'cursor-not-allowed'
-                  : 'cursor-pointer'
-              }`}
-              onClick={nextPage}
-            >
-              {`>`}
-            </button>
-          </footer>
-        ) : (
-          false
-        )}
-      </div>
     </div>
   )
 }

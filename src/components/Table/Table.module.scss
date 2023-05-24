@@ -33,70 +33,83 @@
                 }
             }
         }
-        .tableWrapperOverFlow {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            height: 100%;
-            max-height: 500px;
-            overflow-y: auto;
-            table {
-                border-collapse: separate;
+        main {
+        display: flex;
+        height: 100%;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 12px;
+            .tableWrapperOverFlow {
                 width: 100%;
-                border-spacing: 0 0.5rem;
-                font-weight: 500;
-                font-size: 16px;
-                line-height: 19px;
-                color: #FCFCFC;
-                thead {
-                    height: 54px;
-                    position: sticky;
-                    top: 0;
-                    color: rgb(8, 56, 100);
-                    z-index: 2;
-                    tr {
-                        background-color: white;
-                        cursor: auto;
-                        &:hover {
+                display: flex;
+                justify-content: center;
+                max-height: 500px;
+                overflow-y: auto;
+                box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+                padding: 5px;
+                padding-top: 0px;
+                border-radius: 8px;
+                table {
+                    border-collapse: separate;
+                    width: 100%;
+                    height: auto;
+                    border-spacing: 0 0.5rem;
+                    font-weight: 500;
+                    font-size: 16px;
+                    line-height: 19px;
+                    color: #FCFCFC;
+                    thead {
+                        height: 54px;
+                        position: sticky;
+                        top: 0;
+                        color: rgb(8, 56, 100);
+                        z-index: 2;
+                    
+                        tr {
                             background-color: white;
-                        }       
-                    } 
-                    th {
-                        text-align: start;
+                            cursor: auto;
+                            &:hover {
+                                background-color: white;
+                            }       
+                        } 
+                        th {
+                            text-align: start;      
+                        }
+                        
+                    }
+                    tbody {
+            
+                        tr {
+                            max-height: 44px;
+                            background-color: rgb(21, 73, 122);;
+                            cursor: pointer;
+                            td {
+                                max-height: 44px;
+                                padding: 0px 9px;
+                                background: inherit;
+                                &:first-child {
+                                    border-top-left-radius: 6px;
+                                    border-bottom-left-radius: 6px;
+                                    width: 50%;
+                                    
+                                }
+                                &:last-child {
+                                    border-top-right-radius: 6px;
+                                    border-bottom-right-radius: 6px;
+                                    
+                                }
+                                
+                            }
+                            &:hover {
+                                background-color: rgb(31, 49, 66);
+                            }
+                        }
+                    }
+                    .sectorsHeader {
+                        width: 25%;
                     }
                     
                 }
-                tbody {
-        
-                    tr {
-                        background-color: rgb(21, 73, 122);;
-                        cursor: pointer;
-                        height: 20px;
-                        td {
-                            padding: 0px 9px;
-                            background: inherit;
-                            &:first-child {
-                                border-top-left-radius: 6px;
-                                border-bottom-left-radius: 6px;
-                                width: 50%;
-                                
-                            }
-                            &:last-child {
-                                border-top-right-radius: 6px;
-                                border-bottom-right-radius: 6px;
-                                
-                            }
-                            
-                        }
-                        &:hover {
-                            background-color: rgb(31, 49, 66);
-                        }
-                    }
-                }
-                .sectorsHeader {
-                    width: 25%;
-                }
-                
             }
         }
         footer {
