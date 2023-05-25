@@ -1,88 +1,32 @@
 import styles from './RegisterCompany.module.scss'
 import InputMask from 'react-input-mask'
-import OutlinedInput from '@mui/material/OutlinedInput'
-import InputLabel from '@mui/material/InputLabel'
-import MenuItem from '@mui/material/MenuItem'
-import FormControl from '@mui/material/FormControl'
-import Select from '@mui/material/Select'
-import Checkbox from '@mui/material/Checkbox'
 import { useAllContexts } from '@/contexts/ContextsProvider'
-import {
-  Box,
-  Button,
-  Chip,
-  TextField,
-  Theme,
-  Typography,
-  useTheme,
-} from '@mui/material'
+import { Button, TextField, Typography } from '@mui/material'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { SnackBar } from '../SnackBar'
 import { BsBuildingAdd } from 'react-icons/bs'
+import { Select } from 'antd'
 import api from '@/service/api'
-
 type DataCompany = {
   cnpj: number
   name: string
   sectors: []
 }
-function getStyles(name: string, personName: readonly string[], theme: Theme) {
-  return {
-    fontWeight:
-      personName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  }
-}
 
 export function RegisterCompany() {
   const { register, handleSubmit, reset } = useForm<DataCompany>()
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: 48 * 4.5 + 8,
-        width: 250,
-      },
-    },
-  }
-  const theme = useTheme()
+
   const { sectors, companies, setCompanies } = useAllContexts()
   const [sectorsSelected, setSectorsSelected] = useState<any>([])
   const [snackBarOpen, setSnackBarOpen] = useState(false)
   const [responseMenssage, setResponseMenssage] = useState('')
   const [response, setResponse] = useState<any>(false)
-
-  const handleChange = (event: any) => {
-    const {
-      target: { value },
-    } = event
-    setSectorsSelected(value)
-  }
+  const filteredOptions =
+    typeof sectors !== 'undefined' &&
+    sectors.filter((o: any) => !sectorsSelected.includes(o))
   const handleRegisterCompany = async (data: DataCompany) => {
-    try {
-      const response = await api.post('/companies', data)
-      setCompanies([
-        ...companies,
-        {
-          id: response.data.company.id,
-          name: data.name,
-          cnpj: data.cnpj,
-          sectors: sectors.filter((secs: any) =>
-            data.sectors.some((secs2: any) => secs2.id === secs.id),
-          ),
-        },
-      ])
-      setSnackBarOpen(true)
-      setResponse(false)
-      setResponseMenssage(response.data.message)
-      reset()
-      setSectorsSelected([])
-    } catch (error: any) {
-      setSnackBarOpen(true)
-      setResponse(true)
-      setResponseMenssage(error.response.data.error)
-    }
+    console.log(data)
   }
 
   return (
@@ -127,43 +71,25 @@ export function RegisterCompany() {
               )}
             </InputMask>
           </span>
-          <span>
-            <FormControl sx={{ maxWidth: '320px' }}>
-              <InputLabel id="demo-multiple-chip-label">Setores</InputLabel>
-              <Select
-                {...register('sectors')}
-                labelId="demo-multiple-chip-label"
-                id="demo-multiple-chip"
-                multiple
-                label="Setores"
-                value={sectorsSelected}
-                onChange={handleChange}
-                input={
-                  <OutlinedInput id="select-multiple-chip" label="Setores" />
-                }
-                renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {selected.map((value: any) => {
-                      return <Chip key={value.id} label={value.name} />
-                    })}
-                  </Box>
-                )}
-                MenuProps={MenuProps}
-              >
-                {typeof sectors !== 'undefined' &&
-                  sectors.map((name: any) => (
-                    <MenuItem
-                      key={name.id}
-                      value={name}
-                      style={getStyles(name, sectorsSelected, theme)}
-                    >
-                      <Checkbox checked={sectorsSelected.indexOf(name) > -1} />
-                      {name.name}
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl>
-          </span>
+
+          <Select
+            {...register('sectors')}
+            mode="multiple"
+            placeholder="Setores"
+            value={sectorsSelected}
+            onChange={setSectorsSelected}
+            style={{
+              zIndex: 9999,
+            }}
+            size="large"
+            options={
+              typeof sectors !== 'undefined' &&
+              filteredOptions.map((item: any) => ({
+                value: item.id,
+                label: item.name,
+              }))
+            }
+          />
         </main>
         <footer>
           <Button

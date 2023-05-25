@@ -116,7 +116,12 @@ export function EditModal(props: any) {
               placeholder="Setores"
               value={sectorsSelected}
               onChange={setSectorsSelected}
-              style={{ width: '100%', maxWidth: '320px', zIndex: 9999 }}
+              style={{
+                width: '100%',
+                maxWidth: '320px',
+                zIndex: 9999,
+              }}
+              size="large"
               options={
                 typeof sectors !== 'undefined' &&
                 filteredOptions.map((item: any) => ({
