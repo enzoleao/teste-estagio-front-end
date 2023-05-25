@@ -6,11 +6,23 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import InputMask from 'react-input-mask'
 import { FiAlertTriangle } from 'react-icons/fi'
-import { Box, Checkbox, Chip, FormControl, InputLabel, MenuItem, OutlinedInput, Select, TextField, Theme, useTheme } from '@mui/material'
+import {
+  Box,
+  Checkbox,
+  Chip,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  TextField,
+  Theme,
+  useTheme,
+} from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { useAllContexts } from '@/contexts/ContextsProvider'
-import { useEffect, useState } from 'react'
-import isEqual from 'lodash/isEqual';
+import { useState } from 'react'
+
 function getStyles(name: string, personName: readonly string[], theme: Theme) {
   return {
     fontWeight:
@@ -76,7 +88,9 @@ export function EditModal(props: any) {
   const theme = useTheme()
   const { sectors } = useAllContexts()
   const { register } = useForm()
-  const [sectorsSelected, setSectorsSelected] = useState<any>(props.sectorsSelected)
+  const [sectorsSelected, setSectorsSelected] = useState<any>(
+    props.sectorsSelected,
+  )
   const MenuProps = {
     PaperProps: {
       style: {
@@ -138,29 +152,35 @@ export function EditModal(props: any) {
                 multiple
                 label="Setores"
                 value={sectorsSelected}
+                defaultValue={sectorsSelected}
                 onChange={handleChange}
-                input={<OutlinedInput id="select-multiple-chip" label="Setores" />}
+                input={
+                  <OutlinedInput id="select-multiple-chip" label="Setores" />
+                }
                 renderValue={(selected) => (
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                     {selected.map((value: any) => {
-                      return <Chip key={value.id}  label={value.name} />
+                      return <Chip key={value.id} label={value.name} />
                     })}
                   </Box>
                 )}
                 MenuProps={MenuProps}
               >
-                {typeof sectors !=='undefined' &&  sectors.map((name: any) =>{
-                 return (
-                  <MenuItem
-                    key={name.id}
-                    value={name}
-                    style={getStyles(name, sectorsSelected, theme)}
-                  >
-                  
-                    {name.name}
-                  </MenuItem>
-                 )}
-                )}
+                {typeof sectors !== 'undefined' &&
+                  sectors.map((name: any) => {
+                    return (
+                      <MenuItem
+                        key={name.id}
+                        value={name}
+                        style={getStyles(name, sectorsSelected, theme)}
+                      >
+                        <Checkbox
+                          checked={sectorsSelected.indexOf(name) > -1}
+                        />
+                        {name.name}
+                      </MenuItem>
+                    )
+                  })}
               </Select>
             </FormControl>
           </DialogContent>
@@ -168,7 +188,11 @@ export function EditModal(props: any) {
             <Button variant="outlined" color="error" onClick={handleClose}>
               CANCELAR
             </Button>
-            <Button variant="outlined" color="success" onClick={()=>console.log(sectorsSelected)}>
+            <Button
+              variant="outlined"
+              color="success"
+              onClick={() => console.log(sectorsSelected)}
+            >
               SALVAR
             </Button>
           </DialogActions>

@@ -125,7 +125,6 @@ export function RegisterCompany() {
                   label="CNPJ"
                 />
               )}
-             
             </InputMask>
           </span>
           <span>
@@ -139,7 +138,9 @@ export function RegisterCompany() {
                 label="Setores"
                 value={sectorsSelected}
                 onChange={handleChange}
-                input={<OutlinedInput id="select-multiple-chip" label="Setores" />}
+                input={
+                  <OutlinedInput id="select-multiple-chip" label="Setores" />
+                }
                 renderValue={(selected) => (
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                     {selected.map((value: any) => {
@@ -149,16 +150,17 @@ export function RegisterCompany() {
                 )}
                 MenuProps={MenuProps}
               >
-                {typeof sectors !== "undefined" && sectors.map((name: any) => (
-                  <MenuItem
-                    key={name.id}
-                    value={name}
-                    style={getStyles(name, sectorsSelected, theme)}
-                  >
-                    <Checkbox checked={sectorsSelected.indexOf(name) > -1} />
-                    {name.name}
-                  </MenuItem>
-                ))}
+                {typeof sectors !== 'undefined' &&
+                  sectors.map((name: any) => (
+                    <MenuItem
+                      key={name.id}
+                      value={name}
+                      style={getStyles(name, sectorsSelected, theme)}
+                    >
+                      <Checkbox checked={sectorsSelected.indexOf(name) > -1} />
+                      {name.name}
+                    </MenuItem>
+                  ))}
               </Select>
             </FormControl>
           </span>

@@ -14,7 +14,7 @@ type ContextsTypes = {
   maxPage: any
   setShowSnackBarDeleteCompany: any
   showSnackBarDeleteCompany: any
-  orderPages: any,
+  orderPages: any
   setOrderPages: any
 }
 
@@ -87,7 +87,7 @@ export function ContextsProvider({ children }: any) {
         showSnackBarDeleteCompany,
         setShowSnackBarDeleteCompany,
         orderPages,
-        setOrderPages
+        setOrderPages,
       }}
     >
       {children}
