@@ -14,6 +14,8 @@ type ContextsTypes = {
   maxPage: any
   setShowSnackBarDeleteCompany: any
   showSnackBarDeleteCompany: any
+  orderPages: any,
+  setOrderPages: any
 }
 
 export const AllContexts = createContext({} as ContextsTypes)
@@ -27,6 +29,7 @@ export function ContextsProvider({ children }: any) {
   const [maxPage, setMaxPage] = useState()
   const [showSnackBarDeleteCompany, setShowSnackBarDeleteCompany] =
     useState(false)
+  const [orderPages, setOrderPages] = useState(false)
   const showRegisterCompany = (data: boolean) => setRegisterCompany(data)
   useEffect(() => {
     const sectors = async () => {
@@ -39,7 +42,7 @@ export function ContextsProvider({ children }: any) {
     }
     const companies = async () => {
       try {
-        const response = await api.get('/companies')
+        const response = await api.get(`/companies?order=${orderPages}`)
         setPageToShowOnTable(response.data.companies.current_page)
         setMaxPage(response.data.companies.last_page)
         setCompanies(response.data.companies.data)
@@ -83,6 +86,8 @@ export function ContextsProvider({ children }: any) {
         maxPage,
         showSnackBarDeleteCompany,
         setShowSnackBarDeleteCompany,
+        orderPages,
+        setOrderPages
       }}
     >
       {children}

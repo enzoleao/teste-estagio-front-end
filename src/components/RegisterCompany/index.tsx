@@ -77,6 +77,7 @@ export function RegisterCompany() {
       setResponse(false)
       setResponseMenssage(response.data.message)
       reset()
+      setSectorsSelected([])
     } catch (error: any) {
       setSnackBarOpen(true)
       setResponse(true)
@@ -115,6 +116,7 @@ export function RegisterCompany() {
               disabled={false}
               maskChar=""
             >
+              {/* @ts-ignore: Unreachable code error */}
               {() => (
                 <TextField
                   {...register('cnpj')}
@@ -123,6 +125,7 @@ export function RegisterCompany() {
                   label="CNPJ"
                 />
               )}
+             
             </InputMask>
           </span>
           <span>
@@ -136,7 +139,7 @@ export function RegisterCompany() {
                 label="Setores"
                 value={sectorsSelected}
                 onChange={handleChange}
-                input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+                input={<OutlinedInput id="select-multiple-chip" label="Setores" />}
                 renderValue={(selected) => (
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                     {selected.map((value: any) => {
@@ -146,7 +149,7 @@ export function RegisterCompany() {
                 )}
                 MenuProps={MenuProps}
               >
-                {sectors.map((name: any) => (
+                {typeof sectors !== "undefined" && sectors.map((name: any) => (
                   <MenuItem
                     key={name.id}
                     value={name}

@@ -6,14 +6,18 @@ import {
   FilledInput,
   FormControl,
   FormControlLabel,
+  FormHelperText,
   FormLabel,
   InputAdornment,
   InputLabel,
+  MenuItem,
   Radio,
   RadioGroup,
+  Select,
+  SelectChangeEvent,
 } from '@mui/material'
 import { RxMagnifyingGlass } from 'react-icons/rx'
-import { useState, ChangeEvent } from 'react'
+import { useState, ChangeEvent, useEffect } from 'react'
 import { TableRows } from './tablesRows'
 import { SnackBar } from '../SnackBar'
 
@@ -26,24 +30,29 @@ export function Table() {
     maxPage,
     showSnackBarDeleteCompany,
     setShowSnackBarDeleteCompany,
+    orderPages,
+    setOrderPages
   } = useAllContexts()
   const [companyName, setCompanyName] = useState('')
   const [searchMode, setSearchMode] = useState('Empresa')
 
+  useEffect(()=>{
+    searchCompany()
+  },[companyName])
+
   const nextPage = async () => {
     setPageToShowOnTable(pageToShowOnTable + 1)
-    const response = await api.get(`/companies?page=${pageToShowOnTable + 1}`)
+    const response = await api.get(`/companies?page=${pageToShowOnTable + 1}&order=${orderPages}`)
     setCompanies(response.data.companies.data)
   }
   const lastPage = async () => {
     setPageToShowOnTable(pageToShowOnTable - 1)
-    const response = await api.get(`/companies?page=${pageToShowOnTable - 1}`)
+    const response = await api.get(`/companies?page=${pageToShowOnTable - 1}&order=${orderPages}`)
     setCompanies(response.data.companies.data)
   }
   const searchCompany = async () => {
     if (searchMode === 'Empresa' || companyName === '') {
       const response = await api.get(`/companies/${companyName}`)
-      console.log(response)
       companyName === ''
         ? setCompanies(response.data.companies.data)
         : setCompanies(response.data.companies)
@@ -51,24 +60,16 @@ export function Table() {
       const response = await api.get(`/search/${companyName}`)
       setCompanies(response.data.companies)
     }
+    setPageToShowOnTable(1)
   }
-  const ordCompaniesName = () => {
-    const novoArray = [...companies]
-
-    novoArray.sort((a, b) => {
-      const nomeA = a.name.toUpperCase()
-      const nomeB = b.name.toUpperCase()
-      if (nomeA < nomeB) {
-        return -1
-      } else if (nomeA > nomeB) {
-        return 1
-      }
-      return 0
-    })
-    setCompanies(novoArray)
+  const orderResults = async()=> {
+    setOrderPages(!orderPages)
+    const response = await api.get(`/companies?page=${pageToShowOnTable}&order=${!orderPages}`)
+    setCompanies(response.data.companies.data)
   }
-  const handleChangeSearchMode = (event: ChangeEvent<HTMLInputElement>) => {
-    setSearchMode((event.target as HTMLInputElement).value)
+  const [sectorsSelected, setSectorsSelected] = useState<any>([])
+  const handleChangeSearchMode = (event: SelectChangeEvent) => {
+    setSearchMode(event.target.value);
   }
   return (
     <div className={styles.tableWrapper}>
@@ -77,7 +78,7 @@ export function Table() {
           <div>
             <FormControl variant="filled">
               <InputLabel htmlFor="input-with-icon-adornment">
-                Pesquisar {searchMode}
+                Pesquisar por {searchMode}
               </InputLabel>
               <FilledInput
                 id="input-with-icon-adornment"
@@ -95,32 +96,21 @@ export function Table() {
                 }
               />
             </FormControl>
-            <FormControl>
-              <FormLabel id="demo-row-radio-buttons-group-label">
-                Modo de pesquisa
-              </FormLabel>
-              <RadioGroup
-                row
-                aria-labelledby="demo-row-radio-buttons-group-label"
-                name="row-radio-buttons-group"
-                value={searchMode}
+            <FormHelperText>Pesquisar por</FormHelperText>
+            <FormControl variant='filled' sx={{ minWidth: 120 }}>
+              <Select
                 onChange={handleChangeSearchMode}
+                value={searchMode}
+                displayEmpty
+                inputProps={{ 'aria-label': 'Without label' }}
               >
-                <FormControlLabel
-                  value="Empresa"
-                  control={<Radio />}
-                  label="Empresa"
-                />
-                <FormControlLabel
-                  value="Setor"
-                  control={<Radio />}
-                  label="Setor"
-                />
-              </RadioGroup>
+                <MenuItem value={'Empresa'}>Empresa</MenuItem>
+                <MenuItem value={'Setor'}>Setor</MenuItem>
+              </Select>
             </FormControl>
           </div>
           <div>
-            <Button variant="outlined" onClick={ordCompaniesName}>
+            <Button variant="outlined" onClick={orderResults}>
               ORDENAR
             </Button>
           </div>
@@ -187,6 +177,7 @@ export function Table() {
         open={showSnackBarDeleteCompany}
         setOpen={setShowSnackBarDeleteCompany}
         error={false}
+      
         message={'Deletado com sucesso'}
       />
     </div>

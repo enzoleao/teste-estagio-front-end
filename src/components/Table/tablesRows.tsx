@@ -10,6 +10,7 @@ export function TableRows(props: any) {
     useAllContexts()
   const [openModalToDelete, setOpenModalToDelete] = useState(false)
   const [openModalToEdit, setOpenModalToEdit] = useState(false)
+  const [sectorsSelected, setsectorsSelected] = useState(props.sectors)
   const deleteCompany = async () => {
     try {
       await api.delete(`/companies/${props.id}`)
@@ -50,6 +51,9 @@ export function TableRows(props: any) {
       />
       <EditModal
         open={openModalToEdit}
+        name={props.name}
+        sectorsSelected={props.sectors}
+        cnpj={props.cnpj}
         setOpen={setOpenModalToEdit}
         onClick={() => console.log('edit')}
         employeeToDelete={'teste'}

@@ -32,7 +32,7 @@ export function SnackBar(props: SnackBarProps) {
     <Snackbar
       anchorOrigin={{ vertical, horizontal }}
       open={props.open}
-      autoHideDuration={6000}
+      autoHideDuration={5000}
       onClose={handleClose}
       key={vertical + horizontal}
     >
