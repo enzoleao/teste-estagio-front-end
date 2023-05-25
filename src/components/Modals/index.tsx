@@ -6,31 +6,11 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import InputMask from 'react-input-mask'
 import { FiAlertTriangle } from 'react-icons/fi'
-import {
-  Box,
-  Checkbox,
-  Chip,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  OutlinedInput,
-  Select,
-  TextField,
-  Theme,
-  useTheme,
-} from '@mui/material'
+import { TextField } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { useAllContexts } from '@/contexts/ContextsProvider'
 import { useState } from 'react'
-
-function getStyles(name: string, personName: readonly string[], theme: Theme) {
-  return {
-    fontWeight:
-      personName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  }
-}
+import { Select } from 'antd'
 export function DeleteModal(props: any) {
   const handleClose = () => {
     props.setOpen(false)
@@ -85,27 +65,15 @@ export function EditModal(props: any) {
   const handleClose = () => {
     props.setOpen(false)
   }
-  const theme = useTheme()
+
   const { sectors } = useAllContexts()
   const { register } = useForm()
   const [sectorsSelected, setSectorsSelected] = useState<any>(
-    props.sectorsSelected,
+    props.sectorsSelected.map(({ id }: any) => id),
   )
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: 48 * 4.5 + 8,
-        width: 250,
-      },
-    },
-  }
-  const handleChange = (event: any) => {
-    const {
-      target: { value },
-    } = event
-    setSectorsSelected(value)
-  }
-
+  const filteredOptions =
+    typeof sectors !== 'undefined' &&
+    sectors.filter((o: any) => !sectorsSelected.includes(o))
   return (
     <div>
       <form action="">
@@ -143,46 +111,21 @@ export function EditModal(props: any) {
                 />
               )}
             </InputMask>
-            <FormControl sx={{ maxWidth: '320px' }}>
-              <InputLabel id="demo-multiple-chip-label">Setores</InputLabel>
-              <Select
-                {...register('sectors')}
-                labelId="demo-multiple-chip-label"
-                id="demo-multiple-chip"
-                multiple
-                label="Setores"
-                value={sectorsSelected}
-                defaultValue={sectorsSelected}
-                onChange={handleChange}
-                input={
-                  <OutlinedInput id="select-multiple-chip" label="Setores" />
-                }
-                renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {selected.map((value: any) => {
-                      return <Chip key={value.id} label={value.name} />
-                    })}
-                  </Box>
-                )}
-                MenuProps={MenuProps}
-              >
-                {typeof sectors !== 'undefined' &&
-                  sectors.map((name: any) => {
-                    return (
-                      <MenuItem
-                        key={name.id}
-                        value={name}
-                        style={getStyles(name, sectorsSelected, theme)}
-                      >
-                        <Checkbox
-                          checked={sectorsSelected.indexOf(name) > -1}
-                        />
-                        {name.name}
-                      </MenuItem>
-                    )
-                  })}
-              </Select>
-            </FormControl>
+            <Select
+              mode="multiple"
+              placeholder="Setores"
+              value={sectorsSelected}
+              onChange={setSectorsSelected}
+              style={{ width: '100%', maxWidth: '320px', zIndex: 9999 }}
+              options={
+                typeof sectors !== 'undefined' &&
+                filteredOptions.map((item: any) => ({
+                  value: item.id,
+                  label: item.name,
+                }))
+              }
+              dropdownStyle={{ zIndex: 9999 }}
+            />
           </DialogContent>
           <DialogActions>
             <Button variant="outlined" color="error" onClick={handleClose}>

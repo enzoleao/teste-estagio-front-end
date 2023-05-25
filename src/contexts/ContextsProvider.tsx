@@ -16,6 +16,7 @@ type ContextsTypes = {
   showSnackBarDeleteCompany: any
   orderPages: any
   setOrderPages: any
+  teste: any
 }
 
 export const AllContexts = createContext({} as ContextsTypes)
@@ -54,7 +55,10 @@ export function ContextsProvider({ children }: any) {
     companies()
     setLoading(false)
   }, [])
-
+  const teste = [
+    { id: 1, name: 'Teste' },
+    { id: 2, name: 'Teste2' },
+  ]
   const handleCreateCompany = async (data: any) => {
     try {
       const response = await api.post('/companies', data)
@@ -88,6 +92,7 @@ export function ContextsProvider({ children }: any) {
         setShowSnackBarDeleteCompany,
         orderPages,
         setOrderPages,
+        teste,
       }}
     >
       {children}
