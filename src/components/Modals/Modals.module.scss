@@ -1,0 +1,10 @@
+.customSelect{
+    display: flex;
+    min-width: 100%;
+    min-height: 56px;
+
+        div {
+            flex: auto;
+            flex-wrap: wrap;
+        }
+}

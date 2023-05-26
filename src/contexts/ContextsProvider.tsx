@@ -17,6 +17,12 @@ type ContextsTypes = {
   orderPages: any
   setOrderPages: any
   teste: any
+  deleteOrUpdate: boolean,
+  setDeleteOrUpdate: any
+  showHomeErros: boolean
+  setShowHomeErros: any
+  errorMessageToShowHome: any
+  setErrorMessageToShowHome: any
 }
 
 export const AllContexts = createContext({} as ContextsTypes)
@@ -28,9 +34,12 @@ export function ContextsProvider({ children }: any) {
   const [loading, setLoading] = useState(true)
   const [pageToShowOnTable, setPageToShowOnTable] = useState(1)
   const [maxPage, setMaxPage] = useState()
+  const [deleteOrUpdate, setDeleteOrUpdate] = useState(true)
   const [showSnackBarDeleteCompany, setShowSnackBarDeleteCompany] =
     useState(false)
   const [orderPages, setOrderPages] = useState(false)
+  const [showHomeErros, setShowHomeErros] = useState(false)
+  const [errorMessageToShowHome, setErrorMessageToShowHome] = useState('')
   const showRegisterCompany = (data: boolean) => setRegisterCompany(data)
   useEffect(() => {
     const sectors = async () => {
@@ -93,6 +102,12 @@ export function ContextsProvider({ children }: any) {
         orderPages,
         setOrderPages,
         teste,
+        setDeleteOrUpdate,
+        deleteOrUpdate,
+        showHomeErros,
+        setShowHomeErros,
+        errorMessageToShowHome,
+        setErrorMessageToShowHome
       }}
     >
       {children}

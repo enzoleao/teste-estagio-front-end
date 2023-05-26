@@ -2,21 +2,24 @@ import styles from './RegisterCompany.module.scss'
 import InputMask from 'react-input-mask'
 import { useAllContexts } from '@/contexts/ContextsProvider'
 import { Button, TextField, Typography } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { SnackBar } from '../SnackBar'
 import { BsBuildingAdd } from 'react-icons/bs'
 import { Select } from 'antd'
 import api from '@/service/api'
+
+
 type DataCompany = {
   cnpj: number
   name: string
   sectors: []
 }
 
-export function RegisterCompany() {
-  const { register, handleSubmit, reset } = useForm<DataCompany>()
 
+export function RegisterCompany() {
+
+  const { register, handleSubmit, reset, setValue  } = useForm<DataCompany>()
   const { sectors, companies, setCompanies } = useAllContexts()
   const [sectorsSelected, setSectorsSelected] = useState<any>([])
   const [snackBarOpen, setSnackBarOpen] = useState(false)
@@ -24,11 +27,39 @@ export function RegisterCompany() {
   const [response, setResponse] = useState<any>(false)
   const filteredOptions =
     typeof sectors !== 'undefined' &&
-    sectors.filter((o: any) => !sectorsSelected.includes(o))
+    sectors.filter((o: any) =>{ 
+      return(!sectorsSelected.includes(o))})
   const handleRegisterCompany = async (data: DataCompany) => {
-    console.log(data)
+    try {
+      const response = await api.post('/companies', 
+        data
+      )
+      setCompanies([
+        ...companies,
+        {
+          id: response.data.company.id,
+          name: data.name,
+          cnpj: data.cnpj,
+          sectors: sectors.filter((secs: any) =>
+            data.sectors.some((secs2: any) => secs2 === secs.id),
+          ),
+        },
+      ])
+      setSnackBarOpen(true)
+      setResponse(false)
+      setResponseMenssage(response.data.message)
+      reset()
+      setSectorsSelected([])
+    } catch (error: any) {
+      setSnackBarOpen(true)
+      setResponse(true)
+      setResponseMenssage(error.response.data.error)
+    }
   }
-
+ 
+  useEffect(() => {
+    setValue('sectors', sectorsSelected);
+  }, [sectorsSelected, setValue]);
   return (
     <div className={styles.registerCompanyContainer}>
       <form onSubmit={handleSubmit(handleRegisterCompany)} action="">
@@ -76,10 +107,13 @@ export function RegisterCompany() {
             {...register('sectors')}
             mode="multiple"
             placeholder="Setores"
+            className={styles.selectStyle}
             value={sectorsSelected}
             onChange={setSectorsSelected}
+            showSearch={false}
             style={{
               zIndex: 9999,
+              minWidth:'320px'
             }}
             size="large"
             options={

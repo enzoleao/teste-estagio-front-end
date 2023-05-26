@@ -43,6 +43,30 @@
                    }
                 }
             }
+            .selectStyle {
+                display: flex;
+                min-width: 100%;
+                min-height: 56px;
+                
+                div {
+                    flex: auto;
+                    flex-wrap: wrap;
+                    &:hover {
+                        border-color: none;
+                    }
+                }
+                span {
+                    color: #666666;
+                }
+            }
+            .ant-select-selector {
+                border-color: 212121;
+
+                &:hover {
+                    color: red;
+                }
+            }
+
         }
     }
     footer {

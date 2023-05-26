@@ -9,14 +9,16 @@ import { FiAlertTriangle } from 'react-icons/fi'
 import { TextField } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { useAllContexts } from '@/contexts/ContextsProvider'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Select } from 'antd'
+import styles from './Modals.module.scss'
+import api from '@/service/api'
 export function DeleteModal(props: any) {
   const handleClose = () => {
     props.setOpen(false)
   }
   return (
-    <div>
+    <>
       <Dialog
         open={props.open}
         onClose={handleClose}
@@ -58,39 +60,76 @@ export function DeleteModal(props: any) {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   )
 }
+
 export function EditModal(props: any) {
   const handleClose = () => {
     props.setOpen(false)
   }
-
-  const { sectors } = useAllContexts()
-  const { register } = useForm()
-  const [sectorsSelected, setSectorsSelected] = useState<any>(
-    props.sectorsSelected.map(({ id }: any) => id),
-  )
+  
+  const { 
+    sectors, 
+    setDeleteOrUpdate, 
+    setCompanies, 
+    setShowSnackBarDeleteCompany, 
+    setErrorMessageToShowHome,
+    setShowHomeErros } = useAllContexts()
+  const { register, handleSubmit, setValue } = useForm<any>()
+  const [sectorsSelected, setSectorsSelected] = useState<any>(props.sectorsSelected.map(({ id }: any) => id))
   const filteredOptions =
     typeof sectors !== 'undefined' &&
-    sectors.filter((o: any) => !sectorsSelected.includes(o))
+    sectors.filter((o: any) => !sectorsSelected?.includes(o))
+  
+  useEffect(()=>{
+      setValue('sectors', sectorsSelected)
+  },[sectorsSelected, setValue])
+
+  const handleUpdateCompany = async (data: any) => {
+    try {
+      const response = await api.put(`/companies/${props.id}`, data)
+      setCompanies((i: any) => {
+        return i.map((objeto: any) => {
+          if (objeto.id === props.id) {
+            return { ...objeto, ... {
+              id: props.id,
+              cnpj: data.cnpj,
+              name: data.name,
+              sectors: sectors.filter((secs: any) =>
+              data.sectors?.some((secs2: any) => secs2 === secs.id),
+            )
+            }};
+          }
+          setSectorsSelected(data.sectors)
+          return objeto;
+        });
+      });
+      setShowSnackBarDeleteCompany(true)
+      setDeleteOrUpdate(false)
+      props.setOpen(false)
+    }catch(err: any){
+      setErrorMessageToShowHome(err.response.data.error)
+      setShowHomeErros(true)
+    }
+  }
   return (
-    <div>
-      <form action="">
+    <>
         <Dialog open={props.open} onClose={handleClose}>
+      <form onSubmit={handleSubmit(handleUpdateCompany)} action="">
           <DialogTitle>Editar Empresa</DialogTitle>
           <DialogContent
             sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
           >
             <TextField
+              {...register('name')}
               sx={{ minWidth: '420px' }}
               autoFocus
               autoComplete="off"
               margin="dense"
               id="name"
               label="Nome da Empresa"
-              type="email"
-              value={props.name}
+              defaultValue={props.name}
               fullWidth
               variant="outlined"
             />
@@ -99,7 +138,7 @@ export function EditModal(props: any) {
               mask="999.999.99/9999-99"
               disabled={false}
               maskChar=""
-              value={props.cnpj}
+              defaultValue={props.cnpj}
             >
               {/* @ts-ignore: Unreachable code error */}
               {() => (
@@ -107,21 +146,24 @@ export function EditModal(props: any) {
                   {...register('cnpj')}
                   sx={{ maxWidth: '320px' }}
                   label="CNPJ"
-                  value={props.cnpj}
+                  defaultValue={props.cnpj}
                 />
               )}
             </InputMask>
             <Select
+            {...register('sectors')}
+              className={styles.customSelect}
               mode="multiple"
               placeholder="Setores"
               value={sectorsSelected}
+              defaultValue={props.sectorsSelected.map(({ id }: any) => id)}
               onChange={setSectorsSelected}
               style={{
                 width: '100%',
                 maxWidth: '320px',
                 zIndex: 9999,
+                
               }}
-              size="large"
               options={
                 typeof sectors !== 'undefined' &&
                 filteredOptions.map((item: any) => ({
@@ -129,6 +171,7 @@ export function EditModal(props: any) {
                   label: item.name,
                 }))
               }
+              size='large'
               dropdownStyle={{ zIndex: 9999 }}
             />
           </DialogContent>
@@ -137,15 +180,15 @@ export function EditModal(props: any) {
               CANCELAR
             </Button>
             <Button
+              type='submit'
               variant="outlined"
               color="success"
-              onClick={() => console.log(sectorsSelected)}
             >
               SALVAR
             </Button>
           </DialogActions>
-        </Dialog>
       </form>
-    </div>
+        </Dialog>
+    </>
   )
 }

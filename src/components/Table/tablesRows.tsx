@@ -6,7 +6,7 @@ import { DeleteModal, EditModal } from '../Modals'
 import { useAllContexts } from '@/contexts/ContextsProvider'
 
 export function TableRows(props: any) {
-  const { companies, setCompanies, setShowSnackBarDeleteCompany } =
+  const { companies, setCompanies, setShowSnackBarDeleteCompany, setDeleteOrUpdate } =
     useAllContexts()
   const [openModalToDelete, setOpenModalToDelete] = useState(false)
   const [openModalToEdit, setOpenModalToEdit] = useState(false)
@@ -17,6 +17,7 @@ export function TableRows(props: any) {
       setCompanies(companies.filter((obj: any) => obj.id !== props.id))
       setOpenModalToDelete(false)
       setShowSnackBarDeleteCompany(true)
+      setDeleteOrUpdate(true)
     } catch (err) {
       console.log(err)
     }
@@ -52,6 +53,7 @@ export function TableRows(props: any) {
       <EditModal
         open={openModalToEdit}
         name={props.name}
+        id={props.id}
         sectorsSelected={props.sectors}
         cnpj={props.cnpj}
         setOpen={setOpenModalToEdit}

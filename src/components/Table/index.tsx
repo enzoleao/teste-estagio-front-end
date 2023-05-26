@@ -31,7 +31,11 @@ export function Table() {
     showSnackBarDeleteCompany,
     setShowSnackBarDeleteCompany,
     orderPages,
-    setOrderPages
+    setOrderPages,
+    deleteOrUpdate,
+    showHomeErros,
+    setShowHomeErros,
+    errorMessageToShowHome
   } = useAllContexts()
   const [companyName, setCompanyName] = useState('')
   const [searchMode, setSearchMode] = useState('Empresa')
@@ -67,7 +71,6 @@ export function Table() {
     const response = await api.get(`/companies?page=${pageToShowOnTable}&order=${!orderPages}`)
     setCompanies(response.data.companies.data)
   }
-  const [sectorsSelected, setSectorsSelected] = useState<any>([])
   const handleChangeSearchMode = (event: SelectChangeEvent) => {
     setSearchMode(event.target.value);
   }
@@ -82,6 +85,7 @@ export function Table() {
               </InputLabel>
               <FilledInput
                 id="input-with-icon-adornment"
+                autoComplete='false'
                 sx={{ width: '320px' }}
                 onChange={(e) => setCompanyName(e.target.value)}
                 onBlur={searchCompany}
@@ -177,8 +181,13 @@ export function Table() {
         open={showSnackBarDeleteCompany}
         setOpen={setShowSnackBarDeleteCompany}
         error={false}
-      
-        message={'Deletado com sucesso'}
+        message={deleteOrUpdate ? 'Deletado com sucesso' : 'Atualizado com sucesso'}
+      />
+      <SnackBar
+        open={showHomeErros}
+        setOpen={setShowHomeErros}
+        error={true}
+        message={errorMessageToShowHome}
       />
     </div>
   )
