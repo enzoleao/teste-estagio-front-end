@@ -15,12 +15,14 @@ import {
   RadioGroup,
   Select,
   SelectChangeEvent,
+  Switch,
 } from '@mui/material'
 import { RxMagnifyingGlass } from 'react-icons/rx'
 import { useState, ChangeEvent, useEffect } from 'react'
 import { TableRows } from './tablesRows'
 import { SnackBar } from '../SnackBar'
-
+import { SlOptionsVertical } from 'react-icons/sl'
+import Menu from '@mui/material/Menu';
 export function Table() {
   const {
     companies,
@@ -74,6 +76,15 @@ export function Table() {
   const handleChangeSearchMode = (event: SelectChangeEvent) => {
     setSearchMode(event.target.value);
   }
+  const [anchorButtonMenu, setAnchorButtonMenu] = useState<null | HTMLElement>(null);
+  const openMenu = Boolean(anchorButtonMenu);
+  const handleClickOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorButtonMenu(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorButtonMenu(null);
+  };
+
   return (
     <div className={styles.tableWrapper}>
       <div className={styles.tableContainer}>
@@ -114,8 +125,8 @@ export function Table() {
             </FormControl>
           </div>
           <div>
-            <Button variant="outlined" onClick={orderResults}>
-              ORDENAR
+            <Button onClick={handleClickOpenMenu} sx={{width: '40px',height:'40px',borderRadius: '30px'}} variant="outlined">
+              <SlOptionsVertical className='w-4 h-4' />
             </Button>
           </div>
         </header>
@@ -124,7 +135,9 @@ export function Table() {
             <table>
               <thead>
                 <tr>
-                  <th>EMPRESA</th>
+                  <th>
+                      EMPRESA
+                  </th>
                   <th>CNPJ </th>
                   <th className={styles.sectorsHeader}>SETORES</th>
                   <th>AÇÕES</th>
@@ -189,6 +202,32 @@ export function Table() {
         error={true}
         message={errorMessageToShowHome}
       />
+       <Menu
+        id="basic-menu"
+        anchorEl={anchorButtonMenu}
+        open={openMenu}
+        onClose={handleClose}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <MenuItem>
+          <p>Ordenar por nome</p>
+          <Switch 
+            checked={orderPages}  
+            inputProps={{ 'aria-label': 'controlled' }}
+            onChange={orderResults}
+          />
+        </MenuItem>
+      </Menu>
     </div>
   )
 }

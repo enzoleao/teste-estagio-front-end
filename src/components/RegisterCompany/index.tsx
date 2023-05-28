@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form'
 import { SnackBar } from '../SnackBar'
 import { BsBuildingAdd } from 'react-icons/bs'
 import { Select } from 'antd'
+import { FormHelperText } from '@mui/material';
 import api from '@/service/api'
 
 
@@ -80,7 +81,9 @@ export function RegisterCompany() {
               id="standard-basic"
               label="Nome da Empresa"
               variant="outlined"
+              helperText= {responseMenssage == 'Por favor, preencha o campo Nome da Empresa.' ? 'Preencha este campo' : false}
               autoComplete="off"
+              error={responseMenssage == 'Por favor, preencha o campo Nome da Empresa.' ? true : false}
               sx={{ borderColor: 'white' }}
             />
           </span>
@@ -95,6 +98,10 @@ export function RegisterCompany() {
               {() => (
                 <TextField
                   {...register('cnpj')}
+                  error={
+                    responseMenssage == 'Por favor, preencha o campo CNPJ.' ||  responseMenssage == 'Por favor, insira um CNPJ válido.'? true : false
+                  }
+                  helperText={responseMenssage === 'Por favor, preencha o campo CNPJ.' || responseMenssage === 'Por favor, insira um CNPJ válido.' ? 'Preencha este campo' : false}
                   sx={{ maxWidth: '320px' }}
                   variant="outlined"
                   label="CNPJ"
@@ -102,28 +109,38 @@ export function RegisterCompany() {
               )}
             </InputMask>
           </span>
-
-          <Select
-            {...register('sectors')}
-            mode="multiple"
-            placeholder="Setores"
-            className={styles.selectStyle}
-            value={sectorsSelected}
-            onChange={setSectorsSelected}
-            showSearch={false}
-            style={{
-              zIndex: 9999,
-              minWidth:'320px'
-            }}
-            size="large"
-            options={
-              typeof sectors !== 'undefined' &&
-              filteredOptions.map((item: any) => ({
-                value: item.id,
-                label: item.name,
-              }))
-            }
-          />
+          <div>
+            <Select
+              {...register('sectors')}
+              mode="multiple"
+              placeholder="Setores"
+              className={styles.selectStyle}
+              value={sectorsSelected}
+              onChange={setSectorsSelected}
+              showSearch={false}
+              style={{
+                zIndex: 9999,
+                minWidth:'320px'
+                
+              }}
+              status={responseMenssage == 'Por favor, selecione os Setores.' ? 'error' : undefined}
+              size="large"
+              options={
+                typeof sectors !== 'undefined' &&
+                filteredOptions.map((item: any) => ({
+                  value: item.id,
+                  label: item.name,
+                }))
+              }
+            />
+            {responseMenssage == 'Por favor, selecione os Setores.' ? (
+            <FormHelperText sx={{marginLeft:'18px', color: '#d32f2f'}}>
+              Preencha este campo
+            </FormHelperText>) 
+            : false}
+          </div>
+            
+         
         </main>
         <footer>
           <Button
